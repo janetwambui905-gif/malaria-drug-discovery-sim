@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d16">
+  <title>CADD Pipeline Simulator — Malaria DHFR Resistance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="js/tailwind.config.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="min-h-screen">
+  <header class="sticky top-0 z-30 border-b border-white/[.07] bg-[#090f19]/90 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-3 sm:px-6 xl:px-8">
+      <div class="flex min-w-0 items-center gap-3">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-300/20 bg-teal-300/[.08] text-teal-300">
+          <i data-lucide="atom" class="h-5 w-5"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="truncate text-sm font-extrabold tracking-tight text-slate-100 sm:text-base">CADD Pipeline Simulator</div>
+          <div class="truncate text-[10px] font-semibold tracking-[.12em] text-slate-500 sm:text-[11px]">MALARIA DHFR RESISTANCE <span class="mx-1.5 text-slate-700">/</span> DISCOVERY WORKSPACE</div>
+        </div>
+      </div>
+      <div class="hidden items-center gap-2 rounded-full border border-emerald-400/15 bg-emerald-400/[.06] px-3 py-1.5 text-[11px] font-semibold text-emerald-300 sm:flex">
+        <span class="status-pulse h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+        SIMULATION ENVIRONMENT
+      </div>
+      <button id="headerRun" class="flex shrink-0 items-center gap-2 rounded-lg bg-teal-300 px-3 py-2 text-xs font-extrabold text-slate-950 transition hover:bg-teal-200 sm:px-4">
+        <i data-lucide="play" class="h-3.5 w-3.5 fill-current"></i><span class="hidden sm:inline">Run simulation</span><span class="sm:hidden">Run</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-[1600px] space-y-5 px-4 py-6 sm:px-6 sm:py-7 xl:px-8">
+    <section class="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+      <div>
+        <div class="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase eyebrow"><i data-lucide="crosshair" class="h-3.5 w-3.5 text-teal-300"></i> Discovery overview <span class="text-slate-700">/</span> Project DHFR-01</div>
+        <h1 class="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">Resistance-aware lead discovery</h1>
+        <p class="mt-1.5 max-w-2xl text-xs leading-5 text-slate-400 sm:text-sm">Explore a simulated CADD workflow for identifying inhibitors resilient to mutant <span class="text-slate-300">P. falciparum</span> dihydrofolate reductase.</p>
+      </div>
+      <div class="flex items-center gap-2 text-[10px] text-slate-500">
+        <i data-lucide="database" class="h-3.5 w-3.5"></i>
+        <span>DEMO DATASET</span><span class="text-slate-700">•</span><span class="mono">5 MOLECULES</span>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase eyebrow">Candidates screened</span>
+          <i data-lucide="scan-search" class="h-4 w-4 text-blue-300"></i>
+        </div>
+        <div class="mt-3 flex items-end gap-2"><span id="statScreened" class="text-2xl font-extrabold tracking-tight sm:text-3xl">1,248</span><span class="mb-1 text-[10px] text-emerald-300">+ simulation set</span></div>
+        <div class="mt-2 text-[10px] text-slate-500">Virtual library screened</div>
+      </article>
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase eyebrow">Top hits identified</span>
+          <i data-lucide="trophy" class="h-4 w-4 text-amber-300"></i>
+        </div>
+        <div class="mt-3 flex items-end gap-2"><span id="statHits" class="text-2xl font-extrabold tracking-tight sm:text-3xl">12</span><span class="mb-1 text-[10px] text-slate-500">of 1,248</span></div>
+        <div class="mt-2 text-[10px] text-slate-500">Docking + mutant filter</div>
+      </article>
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase eyebrow">Avg binding energy</span>
+          <i data-lucide="activity" class="h-4 w-4 text-teal-300"></i>
+        </div>
+        <div class="mt-3 flex items-end gap-2"><span id="statEnergy" class="text-2xl font-extrabold tracking-tight sm:text-3xl">−8.4</span><span class="mb-1 text-[10px] text-slate-500">kcal/mol</span></div>
+        <div class="mt-2 text-[10px] text-slate-500">Across top-ranked compounds</div>
+      </article>
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase eyebrow">ADMET pass rate</span>
+          <i data-lucide="shield-check" class="h-4 w-4 text-violet-300"></i>
+        </div>
+        <div class="mt-3 flex items-end gap-2"><span id="statAdmet" class="text-2xl font-extrabold tracking-tight sm:text-3xl">68%</span><span class="mb-1 text-[10px] text-emerald-300">within filters</span></div>
+        <div class="mt-2 text-[10px] text-slate-500">Rule-of-five + property screen</div>
+      </article>
+    </section>
+
+    <section class="panel rounded-xl p-4 sm:p-5">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2"><i data-lucide="workflow" class="h-4 w-4 text-teal-300"></i><h2 class="text-sm font-extrabold text-slate-100">7-step discovery pipeline</h2></div>
+          <p class="mt-1 text-[10px] text-slate-500">Interactive workflow preview · simulated results, not a molecular computation</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="pipelineState" class="text-[10px] font-semibold text-slate-500">READY TO RUN</span>
+          <button id="runPipeline" class="flex items-center gap-2 rounded-lg border border-teal-300/25 bg-teal-300/[.09] px-3 py-2 text-[11px] font-bold text-teal-200 transition hover:bg-teal-300/[.16]">
+            <i data-lucide="play" class="h-3.5 w-3.5 fill-current"></i>Run Pipeline Simulation
+          </button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7" id="pipelineSteps">
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="0"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">01</span><i data-lucide="target" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">Target acquisition</div><div class="mt-1 text-[9px] text-slate-500">PDB · 1J3I</div></div>
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="1"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">02</span><i data-lucide="boxes" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">Library ingestion</div><div class="mt-1 text-[9px] text-slate-500">ChEMBL / ZINC</div></div>
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="2"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">03</span><i data-lucide="orbit" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">Molecular docking</div><div class="mt-1 text-[9px] text-slate-500">Vina / GNINA</div></div>
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="3"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">04</span><i data-lucide="git-compare-arrows" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">Mutant cross-filter</div><div class="mt-1 text-[9px] text-slate-500">S108N · C59R · I164L</div></div>
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="4"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">05</span><i data-lucide="brain-circuit" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">ML scoring</div><div class="mt-1 text-[9px] text-slate-500">XGBoost / scikit-learn</div></div>
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="5"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">06</span><i data-lucide="flask-conical" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">ADMET &amp; Lipinski</div><div class="mt-1 text-[9px] text-slate-500">RDKit · SwissADME</div></div>
+        <div class="pipeline-card rounded-lg border border-line bg-[#0b121c] p-3" data-step="6"><div class="flex items-center justify-between"><span class="step-number mono flex h-6 w-6 items-center justify-center rounded-md border border-slate-700 text-[10px] text-slate-400">07</span><i data-lucide="file-down" class="h-3.5 w-3.5 text-slate-500"></i></div><div class="mt-3 text-[11px] font-bold leading-4">Shortlist export</div><div class="mt-1 text-[9px] text-slate-500">CSV · ranked leads</div></div>
+      </div>
+      <div class="mt-4">
+        <div class="mb-1.5 flex items-center justify-between text-[9px] font-semibold text-slate-500"><span>PIPELINE PROGRESS</span><span id="progressLabel" class="mono">0%</span></div>
+        <div class="h-1.5 overflow-hidden rounded-full bg-slate-800"><div id="progressBar" class="h-full w-0 rounded-full bg-gradient-to-r from-teal-400 to-blue-400 transition-[width] duration-500"></div></div>
+      </div>
+      <div class="mt-4 overflow-hidden rounded-lg border border-white/[.06] bg-[#090f18]">
+        <div class="flex items-center justify-between border-b border-white/[.06] px-3 py-2">
+          <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400"><i data-lucide="terminal" class="h-3.5 w-3.5 text-teal-300"></i> Run console</div>
+          <span id="consoleStatus" class="mono text-[9px] text-slate-600">IDLE</span>
+        </div>
+        <div id="runLog" class="log-scroll h-[76px] space-y-1 overflow-y-auto px-3 py-2 font-mono text-[9px] leading-4 text-slate-500" aria-live="polite">
+          <div><span class="text-slate-700">[00:00:00]</span> Workspace ready. Select a molecule or run the simulated workflow.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-5 xl:grid-cols-[1.15fr_.85fr]">
+      <article class="panel min-w-0 rounded-xl p-4 sm:p-5">
+        <div class="mb-4 flex items-start justify-between gap-3">
+          <div><div class="flex items-center gap-2"><i data-lucide="flask-round" class="h-4 w-4 text-blue-300"></i><h2 class="text-sm font-extrabold">Candidate molecules</h2></div><p class="mt-1 text-[10px] text-slate-500">Select a candidate to inspect its simulated profile</p></div>
+          <span class="rounded-md border border-white/[.07] px-2 py-1 text-[9px] font-semibold text-slate-500">5 COMPOUNDS</span>
+        </div>
+        <div class="scrollbar-hide overflow-x-auto rounded-lg border border-white/[.06]">
+          <table class="mobile-table w-full text-left text-[10px]">
+            <thead class="bg-white/[.025] text-[9px] font-bold uppercase tracking-wider text-slate-500">
+              <tr><th class="px-3 py-2.5">Compound</th><th class="px-3 py-2.5">WT ΔG</th><th class="px-3 py-2.5">Mutant ΔG</th><th class="px-3 py-2.5">Tolerance</th><th class="px-3 py-2.5">Violations</th><th class="px-3 py-2.5">MW (Da)</th></tr>
+            </thead>
+            <tbody id="candidateTable" class="divide-y divide-white/[.05]"></tbody>
+          </table>
+        </div>
+        <div class="mt-3 flex items-start gap-2 rounded-lg border border-white/[.05] bg-white/[.02] p-3">
+          <i data-lucide="hash" class="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500"></i>
+          <div class="min-w-0"><div class="mb-1 text-[9px] font-bold uppercase tracking-wider text-slate-500">Selected SMILES</div><code id="smiles" class="mono block break-all text-[9px] leading-4 text-slate-300">—</code></div>
+        </div>
+      </article>
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="mb-3 flex items-start justify-between gap-3">
+          <div><div class="flex items-center gap-2"><i data-lucide="scan" class="h-4 w-4 text-teal-300"></i><h2 class="text-sm font-extrabold">Candidate structure</h2></div><p id="structureCaption" class="mt-1 text-[10px] text-slate-500">2D schematic · selected molecule</p></div>
+          <span id="selectedBadge" class="rounded-md border border-teal-300/15 bg-teal-300/[.06] px-2 py-1 text-[9px] font-semibold text-teal-200">PYRIMETHAMINE</span>
+        </div>
+        <div class="canvas-wrap overflow-hidden rounded-lg border border-white/[.06]">
+          <canvas id="moleculeCanvas" class="block h-[212px] w-full" aria-label="Schematic two-dimensional molecular structure"></canvas>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[9px] text-slate-500"><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-blue-300"></span>Carbon</span><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-violet-300"></span>Nitrogen</span><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-red-300"></span>Oxygen</span><span class="flex items-center gap-1.5"><span class="h-px w-3 bg-slate-300"></span>Bond</span></div>
+      </article>
+    </section>
+
+    <section class="grid gap-5 xl:grid-cols-[.95fr_1.05fr]">
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="mb-3 flex flex-wrap items-start justify-between gap-3">
+          <div><div class="flex items-center gap-2"><i data-lucide="box" class="h-4 w-4 text-violet-300"></i><h2 class="text-sm font-extrabold">Mutant binding pocket</h2></div><p class="mt-1 text-[10px] text-slate-500">Illustrative 3D-style pose · toggle mutation hotspots</p></div>
+          <div class="flex gap-1.5">
+            <button class="hotspot-chip active rounded-md border border-white/[.08] px-2 py-1 text-[9px] font-bold text-slate-400 transition" data-hotspot="S108N">S108N</button>
+            <button class="hotspot-chip active rounded-md border border-white/[.08] px-2 py-1 text-[9px] font-bold text-slate-400 transition" data-hotspot="C59R">C59R</button>
+            <button class="hotspot-chip active rounded-md border border-white/[.08] px-2 py-1 text-[9px] font-bold text-slate-400 transition" data-hotspot="I164L">I164L</button>
+          </div>
+        </div>
+        <div class="canvas-wrap overflow-hidden rounded-lg border border-white/[.06]">
+          <canvas id="pocketCanvas" class="block h-[240px] w-full" aria-label="Simulated enzyme binding pocket and molecule pose"></canvas>
+        </div>
+        <div class="mt-2 flex items-center justify-between text-[9px] text-slate-500"><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-teal-300"></span>Ligand pose</span><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-rose-400"></span>Mutation hotspot</span><span class="mono">PfDHFR · SIMULATED</span></div>
+      </article>
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <div><div class="flex items-center gap-2"><i data-lucide="chart-no-axes-combined" class="h-4 w-4 text-blue-300"></i><h2 class="text-sm font-extrabold">Binding energy comparison</h2></div><p class="mt-1 text-[10px] text-slate-500">Docking score across target variants · kcal/mol</p></div>
+          <span class="rounded-md border border-white/[.07] px-2 py-1 text-[9px] text-slate-500">LOWER IS BETTER</span>
+        </div>
+        <div class="h-[255px]"><canvas id="bindingChart" aria-label="Binding energy grouped bar chart"></canvas></div>
+      </article>
+    </section>
+
+    <section class="grid gap-5">
+      <article class="panel rounded-xl p-4 sm:p-5">
+        <div class="mb-3"><div class="flex items-center gap-2"><i data-lucide="radar" class="h-4 w-4 text-amber-300"></i><h2 class="text-sm font-extrabold">ADMET property profile</h2></div><p class="mt-1 text-[10px] text-slate-500">Normalized 0–100 desirability score · illustrative model</p></div>
+        <div class="mx-auto h-[260px] max-w-[420px]"><canvas id="admetChart" aria-label="ADMET radar chart"></canvas></div>
+      </article>
+    </section>
+    <footer class="flex flex-col justify-between gap-1 border-t border-white/[.06] py-3 text-[9px] text-slate-600 sm:flex-row">
+      <span>Educational simulation dashboard · all molecule scores and graphics are illustrative</span>
+      <span class="mono">CADD / PF-DHFR / WORKSPACE 01</span>
+    </footer>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/molecular-visualizer.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/pipeline.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

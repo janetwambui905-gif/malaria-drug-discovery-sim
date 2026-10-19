@@ -1,0 +1,39 @@
+/* Dashboard layout and custom visual styling. */
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 48% -20%, rgba(30, 75, 102, .28), transparent 43%),
+    #080d16;
+  color: #e5edf5;
+  font-family: "Manrope", sans-serif;
+}
+.panel {
+  background: linear-gradient(145deg, rgba(17, 26, 39, .96), rgba(13, 21, 32, .94));
+  border: 1px solid rgba(119, 146, 173, .14);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .16);
+}
+.eyebrow { color: #7d91a7; letter-spacing: .13em; }
+.mono { font-family: "DM Mono", monospace; }
+.pipeline-card { transition: border-color .25s, background .25s, transform .25s; }
+.pipeline-card.active {
+  border-color: rgba(94, 234, 212, .62);
+  background: linear-gradient(145deg, rgba(20, 57, 61, .58), rgba(15, 30, 41, .9));
+  box-shadow: 0 0 24px rgba(45, 212, 191, .09);
+  transform: translateY(-2px);
+}
+.pipeline-card.complete { border-color: rgba(94, 234, 212, .25); }
+.pipeline-card.complete .step-number { color: #5eead4; border-color: rgba(94, 234, 212, .5); }
+.candidate-row { transition: background .15s, border-color .15s; cursor: pointer; }
+.candidate-row:hover { background: rgba(27, 42, 57, .5); }
+.candidate-row.selected { background: rgba(24, 62, 67, .34); box-shadow: inset 2px 0 #5eead4; }
+.canvas-wrap { background: radial-gradient(ellipse at center, rgba(30, 53, 70, .34), rgba(9, 15, 23, .55) 70%); }
+.log-scroll { scrollbar-color: #324456 transparent; scrollbar-width: thin; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.hotspot-chip.active { color: #fda4af; border-color: rgba(251, 113, 133, .4); background: rgba(159, 18, 57, .14); }
+.status-pulse { animation: pulse 1.8s infinite; }
+@keyframes pulse { 50% { opacity: .42; } }
+@media (max-width: 640px) {
+  .mobile-table { min-width: 780px; }
+}
